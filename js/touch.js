@@ -34,12 +34,12 @@ const TouchControls = (function() {
       alignItems: 'center',
       justifyContent: 'center',
       fontFamily: 'monospace',
-      fontSize: '24px',
+      fontSize: '20px',
       fontWeight: 'bold',
       color: '#fff',
       background: 'rgba(255,255,255,0.15)',
       border: '2px solid rgba(255,255,255,0.5)',
-      borderRadius: '12px',
+      borderRadius: '10px',
       userSelect: 'none',
       WebkitUserSelect: 'none',
       touchAction: 'none',
@@ -73,6 +73,49 @@ const TouchControls = (function() {
     return btn;
   }
 
+  // A small one-shot tap button (used for Pause). Fires a keydown then keyup.
+  function makeTapButton(label, key, x, y, w, h, extraStyle) {
+    const btn = document.createElement('div');
+    btn.textContent = label;
+    btn.setAttribute('role', 'button');
+    Object.assign(btn.style, {
+      position: 'absolute',
+      left: x,
+      top: y,
+      width: w,
+      height: h,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontFamily: 'monospace',
+      fontSize: '14px',
+      fontWeight: 'bold',
+      color: '#fff',
+      background: 'rgba(0,0,0,0.4)',
+      border: '2px solid rgba(255,255,255,0.4)',
+      borderRadius: '8px',
+      userSelect: 'none',
+      WebkitUserSelect: 'none',
+      touchAction: 'none',
+      pointerEvents: 'auto',
+      zIndex: '15',
+      ...extraStyle
+    });
+    const tap = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      btn.style.background = 'rgba(255,255,255,0.4)';
+      press(key, true);
+      setTimeout(() => {
+        btn.style.background = 'rgba(0,0,0,0.4)';
+        press(key, false);
+      }, 80);
+    };
+    btn.addEventListener('touchstart', tap, { passive: false });
+    btn.addEventListener('mousedown', tap);
+    return btn;
+  }
+
   function build() {
     if (container) return;
     const overlay = document.getElementById('ui-overlay');
@@ -87,20 +130,24 @@ const TouchControls = (function() {
     });
     overlay.appendChild(container);
 
-    // Layout: steer buttons bottom-left, gas/brake bottom-right.
-    // Sizes in % of container so they scale to any screen.
-    const steerY = '62%';
-    const driveY = '62%';
+    // Layout: steer bottom-left, gas/brake bottom-right, pause top-right.
+    // Compact sizes so they don't dominate the screen.
+    const steerY = '78%';
+    const driveY = '78%';
+    const bw = '15%';
+    const bh = '16%';
 
-    const left = makeButton('◀', 'ArrowLeft', '4%', steerY, '16%', '28%', {});
-    const right = makeButton('▶', 'ArrowRight', '22%', steerY, '16%', '28%', {});
-    const brake = makeButton('▼', 'ArrowDown', '62%', driveY, '16%', '28%',
+    const left = makeButton('◀', 'ArrowLeft', '3%', steerY, bw, bh, {});
+    const right = makeButton('▶', 'ArrowRight', '19%', steerY, bw, bh, {});
+    const brake = makeButton('▼', 'ArrowDown', '66%', driveY, bw, bh,
       { color: '#fdd', borderColor: 'rgba(255,150,150,0.6)' });
-    const gas = makeButton('▲', 'ArrowUp', '80%', driveY, '16%', '28%',
+    const gas = makeButton('▲', 'ArrowUp', '82%', driveY, bw, bh,
       { color: '#dfd', borderColor: 'rgba(150,255,150,0.6)' });
+    const pause = makeTapButton('II', 'Escape', '88%', '3%', '10%', '7%',
+      { fontSize: '14px', background: 'rgba(0,0,0,0.4)', borderColor: 'rgba(255,255,255,0.4)' });
 
-    [left, right, brake, gas].forEach(b => container.appendChild(b));
-    buttons = [left, right, brake, gas];
+    [pause, left, right, brake, gas].forEach(b => container.appendChild(b));
+    buttons = [pause, left, right, brake, gas];
   }
 
   function show(v) {
