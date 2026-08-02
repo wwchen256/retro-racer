@@ -250,8 +250,25 @@ const Game = (function() {
 
     Car.draw(ctx, canvas.width, canvas.height);
 
+    renderTouchHint(ctx);
+
     Road.renderMinimap(Car.getZ());
       }
+
+  function renderTouchHint(ctx) {
+    if (typeof TouchControls === 'undefined' || !TouchControls.isTouchDevice()) return;
+    const t = Date.now() / 1000;
+    const fade = Math.max(0, 1 - distance / 60);  // fades out after a little driving
+    if (fade <= 0) return;
+    ctx.save();
+    ctx.globalAlpha = 0.5 * fade * (0.6 + 0.4 * Math.sin(t * 2));
+    ctx.fillStyle = '#fff';
+    ctx.font = '14px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('touch around the car to drive', canvas.width / 2, canvas.height / 2 - 40);
+    ctx.textAlign = 'start';
+    ctx.restore();
+  }
 
   function renderStars() {
     const time = Date.now() / 1000;
