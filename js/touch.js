@@ -52,7 +52,7 @@ const TouchControls = (function() {
     if (!isPlaying()) return want;
 
     const car = getCarScreenPos();
-    const dead = Math.min(window.innerWidth, window.innerHeight) * 0.06;
+    const dead = Math.min(window.innerWidth, window.innerHeight) * 0.10;
 
     for (let i = 0; i < touches.length; i++) {
       const t = touches[i];

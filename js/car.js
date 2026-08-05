@@ -11,10 +11,10 @@ const Car = (function() {
   const SPEED_LIMIT = 250;
   const ACCELERATION = 120;
   const BRAKE_FORCE = 180;
-  const STEER_RATE = 1.5;
-  const STEER_RECENTER = 6;
+  const STEER_RATE = 0.7;
+  const STEER_RECENTER = 10;
   const GRASS_DRAG_K = 8;
-  const MAX_STEER = 0.9;
+  const MAX_STEER = 0.6;
 
   function reset() {
     state.x = 0;
@@ -59,7 +59,7 @@ const Car = (function() {
         }
 
     state.steerX = Math.max(-MAX_STEER, Math.min(MAX_STEER, state.steerX));
-    const lateralFactor = onGrass ? state.speed * 0.004 : Math.max(state.speed / 180, 0.3);
+    const lateralFactor = onGrass ? state.speed * 0.004 : Math.max(state.speed / 360, 0.2);
     state.x += state.steerX * dt * lateralFactor;
 
     const maxSpd = levelConfig ? levelConfig.maxSpeed : SPEED_LIMIT;
