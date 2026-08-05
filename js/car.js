@@ -13,7 +13,7 @@ const Car = (function() {
   const BRAKE_FORCE = 180;
   const STEER_RATE = 0.7;
   const STEER_RECENTER = 10;
-  const GRASS_DRAG_K = 8;
+  const GRASS_DRAG_K = 3;
   const MAX_STEER = 0.6;
 
   function reset() {
@@ -47,7 +47,7 @@ const Car = (function() {
         state.speed *= 0.6;
         }
        } else {
-        const steerScale = onGrass ? 0.6 : Math.max(state.speed / 100, 0.4);
+        const steerScale = onGrass ? 0.85 : Math.max(state.speed / 100, 0.4);
         let input = 0;
         if (keys.ArrowLeft || keys.a || keys.A) input -= 1;
         if (keys.ArrowRight || keys.d || keys.D) input += 1;
@@ -59,7 +59,10 @@ const Car = (function() {
         }
 
     state.steerX = Math.max(-MAX_STEER, Math.min(MAX_STEER, state.steerX));
-    const lateralFactor = onGrass ? state.speed * 0.004 : Math.max(state.speed / 360, 0.2);
+    // Lateral movement always has a floor so you can crawl back onto the road
+    // even when grass has nearly killed your speed.
+    const speedFactor = onGrass ? state.speed * 0.006 : Math.max(state.speed / 360, 0.2);
+    const lateralFactor = Math.max(speedFactor, 0.25);
     state.x += state.steerX * dt * lateralFactor;
 
     const maxSpd = levelConfig ? levelConfig.maxSpeed : SPEED_LIMIT;
