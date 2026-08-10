@@ -31,8 +31,35 @@
           <button id="btn-start" class="menu-btn">START GAME</button>
           <button id="btn-continue" class="menu-btn hidden">CONTINUE</button>
           <button id="btn-levels" class="menu-btn">LEVEL SELECT</button>
+          <button id="btn-multiplayer" class="menu-btn">MULTIPLAYER</button>
         </div>
         <div id="highscore">High Score: 0</div>
+      </div>
+
+      <div id="mp-screen" class="hidden">
+        <h2>ONLINE RACE</h2>
+        <div id="mp-status" class="mp-status">&nbsp;</div>
+        <div id="mp-create-pane">
+          <input id="mp-name" class="mp-input" type="text" maxlength="12" placeholder="Your name">
+          <div class="mp-row">
+            <button id="btn-mp-create" class="menu-btn">CREATE ROOM</button>
+          </div>
+          <div class="mp-or">— or —</div>
+          <input id="mp-code" class="mp-input" type="text" maxlength="4" placeholder="CODE">
+          <button id="btn-mp-join" class="menu-btn">JOIN ROOM</button>
+        </div>
+        <div id="mp-lobby" class="hidden">
+          <div id="mp-room-code" class="mp-room-code">CODE: ----</div>
+          <div id="mp-players" class="mp-players">&nbsp;</div>
+          <button id="btn-mp-ready" class="menu-btn">READY</button>
+        </div>
+        <div class="mp-row">
+          <button id="btn-mp-back" class="menu-btn">BACK</button>
+        </div>
+      </div>
+
+      <div id="countdown-overlay" class="hidden">
+        <div id="countdown-num">3</div>
       </div>
       <div id="game-over" class="hidden">
         <h2 id="game-over-title">STAGE COMPLETE!</h2>
@@ -54,13 +81,15 @@
       </div>
     </div>
   </div>
-   <script src="js/touch.js?v=21"></script>
-   <script src="js/sound.js?v=21"></script>
-   <script src="js/save.js?v=21"></script>
-   <script src="js/levels.js?v=21"></script>
-   <script src="js/road.js?v=21"></script>
-   <script src="js/obstacles.js?v=21"></script>
-   <script src="js/car.js?v=21"></script>
-   <script src="js/main.js?v=21"></script>
+   <script src="js/firebase-config.js?v=22"></script>
+   <script src="js/touch.js?v=22"></script>
+   <script src="js/sound.js?v=22"></script>
+   <script src="js/save.js?v=22"></script>
+   <script src="js/levels.js?v=22"></script>
+   <script src="js/road.js?v=22"></script>
+   <script src="js/obstacles.js?v=22"></script>
+   <script src="js/car.js?v=22"></script>
+   <script src="js/multiplayer.js?v=22"></script>
+   <script src="js/main.js?v=22"></script>
 </body>
 </html>

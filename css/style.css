@@ -158,6 +158,42 @@ body, html {
   background: #222;
 }
 
+/* Multiplayer screen */
+#mp-screen h2 { color: #0ff; text-shadow: 3px 3px 0 #044; }
+.mp-status {
+  font-family: monospace; font-size: 14px; color: #ff0;
+  margin: 8px 0 12px; min-height: 20px; text-align: center;
+}
+.mp-input {
+  font-family: monospace; font-size: 16px;
+  padding: 8px 10px; margin: 4px;
+  background: #111; color: #fff;
+  border: 2px solid #555; border-radius: 4px;
+  text-align: center; text-transform: uppercase;
+}
+.mp-input::placeholder { color: #555; text-transform: none; }
+.mp-row { display: flex; justify-content: center; gap: 8px; margin: 4px; }
+.mp-or { font-family: monospace; color: #888; margin: 8px 0; font-size: 13px; }
+.mp-room-code {
+  font-family: monospace; font-size: 28px; color: #0f0;
+  letter-spacing: 6px; margin: 8px 0;
+  text-shadow: 2px 2px 0 #030;
+}
+.mp-players { font-family: monospace; font-size: 14px; color: #fff; margin: 6px 0 14px; }
+
+/* Countdown overlay */
+#countdown-overlay {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.35);
+  pointer-events: none;
+  z-index: 25;
+}
+#countdown-num {
+  font-family: monospace; font-size: 120px; color: #ff0;
+  text-shadow: 4px 4px 0 #f00;
+}
+
 .hidden {
   display: none !important;
 }
