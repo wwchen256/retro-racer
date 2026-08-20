@@ -64,6 +64,8 @@ const Road = (function() {
 
     const baseSegmentIndex = Math.max(0, Math.floor(playerZ / SEGMENT_LENGTH));
 
+    if (!segments || segments.length === 0) return;  // guard: road not built yet
+
     // Render back to front
     for (let n = DRAW_DISTANCE - 1; n > 0; n--) {
       const idx = (baseSegmentIndex + n) % segments.length;

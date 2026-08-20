@@ -70,7 +70,7 @@ const Multiplayer = (function () {
     }
     if (!code) { emitStatus('error', { message: 'Could not allocate a room code' }); return null; }
     roomCode = code; myRole = 'p1'; remoteRole = 'p2';
-    myName = name || 'Player 1'; level = lvl || 1;
+    myName = name || 'Player 1'; level = Number(lvl) || 1;
     await dbFns.set(dbFns.ref(db, 'rooms/' + code), {
       level: level,
       createdAt: Date.now(),
@@ -97,7 +97,7 @@ const Multiplayer = (function () {
     roomCode = code; myRole = 'p2'; remoteRole = 'p1';
     myName = name || 'Player 2';
     const snap = await dbFns.get(dbFns.ref(db, 'rooms/' + code + '/level'));
-    level = snap.exists() ? snap.val() : 1;
+    level = snap.exists() ? Number(snap.val()) || 1 : 1;
     await dbFns.set(dbFns.ref(db, 'rooms/' + code + '/players/p2'),
       { name: myName, ready: false, lastSeen: Date.now() });
     setupListeners();

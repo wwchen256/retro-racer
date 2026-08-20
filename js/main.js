@@ -281,8 +281,13 @@ const Game = (function() {
   }
 
   function handleMpStart(startTs, lvl) {
-    currentLevel = lvl;
+    currentLevel = Number(lvl) || 1;
     Road.setCurrentLevel(currentLevel);
+    if (Road.getSegments().length === 0) {
+      console.error('MP start: segments empty after setCurrentLevel, rebuilding...');
+      Road.setCurrentLevel(currentLevel);
+    }
+    console.log('MP start: level', currentLevel, 'segments', Road.getSegments().length);
     Car.reset();
     Obstacles.spawnObstacles(Road.getSegments());
     gameState = 'countdown';
@@ -531,8 +536,12 @@ const Game = (function() {
     const dt = Math.min((timestamp - lastTime) / 1000, 0.05);
     lastTime = timestamp;
 
-    update(dt);
-    render();
+    try {
+      update(dt);
+      render();
+    } catch (e) {
+      console.error('gameLoop error:', e);
+    }
 
     requestAnimationFrame(gameLoop);
     }
