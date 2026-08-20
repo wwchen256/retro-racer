@@ -32,13 +32,13 @@
 // ============================================================
 
 window.FIREBASE_CONFIG = {
-  apiKey: 'YOUR_API_KEY',
-  authDomain: 'your-project.firebaseapp.com',
-  databaseURL: 'https://your-project-default-rtdb.firebaseio.com',
-  projectId: 'your-project',
-  storageBucket: 'your-project.appspot.com',
-  messagingSenderId: '0000000000',
-  appId: '1:0000000000:web:abcdef123456'
+  apiKey: 'AIzaSyC62aBdvD0eOhlTLPsyI6wP9kX7xXdtBtk',
+  authDomain: 'retro-racer-online.firebaseapp.com',
+  databaseURL: 'https://retro-racer-online-default-rtdb.firebaseio.com',
+  projectId: 'retro-racer-online',
+  storageBucket: 'retro-racer-online.firebasestorage.app',
+  messagingSenderId: '888550556094',
+  appId: '1:888550556094:web:541dc6c31da25b910af9ef'
 };
 
 // True when real keys are present.
