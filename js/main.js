@@ -67,8 +67,16 @@ const Game = (function() {
     gameLoop(0);
     }
 
+  function isTypingInField(e) {
+    const t = e.target;
+    if (!t) return false;
+    const tag = (t.tagName || '').toLowerCase();
+    return tag === 'input' || tag === 'textarea' || t.isContentEditable;
+  }
+
   function setupInput() {
     document.addEventListener('keydown', (e) => {
+      if (isTypingInField(e)) return;   // don't hijack typing in name/code fields
       e.preventDefault();
       keys[e.key] = true;
       if (e.key === 'Escape' && gameState === 'playing') pauseGame();
@@ -77,6 +85,7 @@ const Game = (function() {
      });
 
     document.addEventListener('keyup', (e) => {
+      if (isTypingInField(e)) return;
       e.preventDefault();
       keys[e.key] = false;
      });

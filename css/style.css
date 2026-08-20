@@ -51,7 +51,7 @@ body, html {
   pointer-events: none;
 }
 
-#menu, #game-over, #level-select, #pause-screen {
+#menu, #game-over, #level-select, #pause-screen, #mp-screen {
   position: absolute;
   top: 0;
   left: 0;
@@ -170,6 +170,7 @@ body, html {
   background: #111; color: #fff;
   border: 2px solid #555; border-radius: 4px;
   text-align: center; text-transform: uppercase;
+  pointer-events: auto;
 }
 .mp-input::placeholder { color: #555; text-transform: none; }
 .mp-row { display: flex; justify-content: center; gap: 8px; margin: 4px; }
