@@ -281,24 +281,29 @@ const Game = (function() {
   }
 
   function handleMpStart(startTs, lvl) {
-    currentLevel = Number(lvl) || 1;
-    Road.setCurrentLevel(currentLevel);
-    if (Road.getSegments().length === 0) {
-      console.error('MP start: segments empty after setCurrentLevel, rebuilding...');
+    try {
+      currentLevel = Number(lvl) || 1;
+      console.log('handleMpStart: lvl=', lvl, '-> currentLevel=', currentLevel);
       Road.setCurrentLevel(currentLevel);
+      console.log('handleMpStart: after setCurrentLevel, segs=', Road.getSegments().length);
+      if (Road.getSegments().length === 0) {
+        console.error('MP: segments empty! LevelConfig[', currentLevel, '] =', typeof LevelConfig, LevelConfig[currentLevel]);
+      }
+      Car.reset();
+      Obstacles.spawnObstacles(Road.getSegments());
+      gameState = 'countdown';
+      score = 0; distance = 0;
+      keys = {};
+      Multiplayer.sendState({ x: 0, z: 0, speed: 0, steerX: 0 });
+      [menu, gameOverScreen, levelSelect, pauseScreen, mpScreen, pauseScreen].forEach(el => el.classList.add('hidden'));
+      hud.classList.remove('hidden');
+      countdownOverlay.classList.remove('hidden');
+      updateCountdown(startTs);
+    } catch (e) {
+      console.error('handleMpStart ERROR:', e);
+      mpStatus.textContent = 'Start error: ' + e.message;
+      mpScreen.classList.remove('hidden');
     }
-    console.log('MP start: level', currentLevel, 'segments', Road.getSegments().length);
-    Car.reset();
-    Obstacles.spawnObstacles(Road.getSegments());
-    gameState = 'countdown';
-    score = 0; distance = 0;
-    keys = {};
-    // Broadcast a zero-state so the opponent renders at the start line immediately.
-    Multiplayer.sendState({ x: 0, z: 0, speed: 0, steerX: 0 });
-    [menu, gameOverScreen, levelSelect, pauseScreen, mpScreen, pauseScreen].forEach(el => el.classList.add('hidden'));
-    hud.classList.remove('hidden');
-    countdownOverlay.classList.remove('hidden');
-    updateCountdown(startTs);
   }
 
   function updateCountdown(startTs) {
@@ -502,6 +507,24 @@ const Game = (function() {
     }
 
     renderTouchHint(ctx);
+
+    // Visible multiplayer diagnostics during countdown
+    if (gameState === 'countdown' || (mpActive && gameState === 'playing')) {
+      ctx.save();
+      ctx.fillStyle = '#ff0';
+      ctx.font = '11px monospace';
+      ctx.textAlign = 'left';
+      const segs = Road.getSegments().length;
+      const lvl = Road.getCurrentLevel();
+      ctx.fillText('DBG lvl=' + lvl + ' segs=' + segs + ' state=' + gameState, 8, canvas.height - 8);
+      if (segs === 0) {
+        ctx.fillStyle = '#f00';
+        ctx.font = '16px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('ROAD NOT BUILT - check console', canvas.width / 2, canvas.height / 2);
+      }
+      ctx.restore();
+    }
 
     Road.renderMinimap(Car.getZ());
       }

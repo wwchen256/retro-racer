@@ -27,7 +27,10 @@ const Road = (function() {
   function buildRoad() {
     segments = [];
     const config = LevelConfig[currentLevel];
-
+    if (!config) {
+      console.error('buildRoad: no LevelConfig for level', currentLevel);
+      return;
+    }
     for (let i = 0; i < config.segmentsPerLevel; i++) {
       let curve = 0;
       if (config.curveAmount > 0) {
