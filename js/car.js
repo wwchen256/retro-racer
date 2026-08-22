@@ -16,6 +16,11 @@ const Car = (function() {
   const GRASS_DRAG_K = 3;
   const MAX_STEER = 0.6;
 
+  function setColors(body, bodyDark) {
+    bodyColor = body;
+    bodyColorDark = bodyDark;
+  }
+
   function reset() {
     state.x = 0;
     state.z = 0;
@@ -109,10 +114,10 @@ const Car = (function() {
     ctx.fillRect(-carW / 2 - 6, carH / 2 - 8, carW / 5, 14);
     ctx.fillRect(carW / 2 - 6, carH / 2 - 8, carW / 5, 14);
 
-    ctx.fillStyle = '#d00';
+    ctx.fillStyle = bodyColor;
     ctx.fillRect(-carW / 2, -carH / 2, carW, carH);
 
-    ctx.fillStyle = '#a00';
+    ctx.fillStyle = bodyColorDark;
     ctx.fillRect(-carW / 2 + 6, -carH / 2 + 3, carW - 12, carH * 0.4);
 
     ctx.fillStyle = '#4af';
@@ -136,6 +141,7 @@ const Car = (function() {
     hitObstacle,
     setSliding,
     draw,
+    setColors,
     getX,
     getZ,
     getSpeed,

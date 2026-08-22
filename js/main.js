@@ -56,6 +56,13 @@ const Game = (function() {
   let mpRaceStart = 0;            // timestamp race began
   let mpFinishTime = null;        // my finish time (ms)
   let mpRemoteName = 'Opponent';
+  // Global player colors: P1 always red, P2 always blue, on every screen.
+  const MP_COLORS = { p1: '#d00', p2: '#24c' };  // self body colors by role
+  const MP_COLORS_DARK = { p1: '#a00', p2: '#159' };
+  let mpMyColor = MP_COLORS.p1;
+  let mpMyColorDark = MP_COLORS_DARK.p1;
+  let mpRemoteColor = MP_COLORS.p2;
+  let mpRemoteColorDark = MP_COLORS_DARK.p2;
 
   function init() {
     setupInput();
@@ -145,6 +152,7 @@ const Game = (function() {
     mpCountdown = 0;
     mpFinishTime = null;
     keys = {};
+    Car.setColors('#d00', '#a00');  // reset to default red for single player
     if (Multiplayer.getRoomCode()) Multiplayer.leave();
     showScreen(menu);
     updateHighscoreDisplay();
@@ -247,7 +255,18 @@ const Game = (function() {
     mpCreatePane.classList.add('hidden');
     mpLobby.classList.remove('hidden');
     mpRoomCode.textContent = 'CODE: ' + code;
-    mpPlayers.textContent = 'You: ' + (mpName.value || 'Player') + '   |   Opponent: waiting...';
+    // Set global colors based on role: P1=red, P2=blue (consistent on all screens)
+    const role = Multiplayer.getMyRole();
+    if (role === 'p2') {
+      mpMyColor = MP_COLORS.p2; mpMyColorDark = MP_COLORS_DARK.p2;
+      mpRemoteColor = MP_COLORS.p1; mpRemoteColorDark = MP_COLORS_DARK.p1;
+    } else {
+      mpMyColor = MP_COLORS.p1; mpMyColorDark = MP_COLORS_DARK.p1;
+      mpRemoteColor = MP_COLORS.p2; mpRemoteColorDark = MP_COLORS_DARK.p2;
+    }
+    Car.setColors(mpMyColor, mpMyColorDark);
+    mpPlayers.textContent = 'You: ' + (mpName.value || 'Player') +
+      ' (' + (role === 'p1' ? 'RED' : 'BLUE') + ')   |   Opponent: waiting...';
     mpStatus.textContent = 'Waiting for opponent...';
   }
 
@@ -350,13 +369,13 @@ const Game = (function() {
     if (size < 3 || p.y < 0 || p.y > ctx.canvas.height) return;
     const x = p.x + rs.x * p.w;
     const y = p.y;
-    // blue rival car (blocky, mirrors player style)
+    // rival car (blocky, mirrors player style) - color based on remote role
     ctx.fillStyle = '#333';
     ctx.fillRect(x - size*0.5 - size*0.06, y - size*0.18, size*0.2, size*0.28);
     ctx.fillRect(x + size*0.5 - size*0.14, y - size*0.18, size*0.2, size*0.28);
-    ctx.fillStyle = '#24c';
+    ctx.fillStyle = mpRemoteColor;
     ctx.fillRect(x - size*0.5, y - size*0.5, size, size*0.56);
-    ctx.fillStyle = '#159';
+    ctx.fillStyle = mpRemoteColorDark;
     ctx.fillRect(x - size*0.5 + size*0.08, y - size*0.45, size*0.84, size*0.22);
     ctx.fillStyle = '#9ef';
     ctx.fillRect(x - size*0.4, y - size*0.42, size*0.3, size*0.14);
