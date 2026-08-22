@@ -99,41 +99,56 @@ const Car = (function() {
   function getSpeed() { return state.speed; }
   function getSteerX() { return state.steerX; }
 
-  function draw(ctx, canvasW, canvasH) {
-    const carW = 80;
-    const carH = 45;
-    const bounce = Math.sin(Date.now() / 100) * (state.speed / SPEED_LIMIT) * 3;
-    const cx = canvasW / 2 + state.steerX * 50;
-    const cy = canvasH - 90 + bounce;
-
-    const lean = state.steerX * 8;
+  // Reusable car sprite, drawn centered at (cx, cy) with given scale.
+  // scale=1 -> 80x45 (the local car's native size).
+  function drawSprite(ctx, cx, cy, scale, body, bodyDark) {
+    const carW = 80 * scale;
+    const carH = 45 * scale;
     ctx.save();
     ctx.translate(cx, cy);
 
+    // wheels
     ctx.fillStyle = '#333';
-    ctx.fillRect(-carW / 2 - 6, carH / 2 - 8, carW / 5, 14);
-    ctx.fillRect(carW / 2 - 6, carH / 2 - 8, carW / 5, 14);
+    ctx.fillRect(-carW / 2 - 6 * scale, carH / 2 - 8 * scale, carW / 5, 14 * scale);
+    ctx.fillRect(carW / 2 - 6 * scale, carH / 2 - 8 * scale, carW / 5, 14 * scale);
 
-    ctx.fillStyle = bodyColor;
+    // body
+    ctx.fillStyle = body;
     ctx.fillRect(-carW / 2, -carH / 2, carW, carH);
 
-    ctx.fillStyle = bodyColorDark;
-    ctx.fillRect(-carW / 2 + 6, -carH / 2 + 3, carW - 12, carH * 0.4);
+    // lower body shading
+    ctx.fillStyle = bodyDark;
+    ctx.fillRect(-carW / 2 + 6 * scale, -carH / 2 + 3 * scale, carW - 12 * scale, carH * 0.4);
 
+    // windshield
     ctx.fillStyle = '#4af';
-    ctx.fillRect(-carW / 2 + 12, -carH / 2 + 6, 16, 10);
-    ctx.fillRect(carW / 2 - 28, -carH / 2 + 6, 16, 10);
+    ctx.fillRect(-carW / 2 + 12 * scale, -carH / 2 + 6 * scale, 16 * scale, 10 * scale);
+    ctx.fillRect(carW / 2 - 28 * scale, -carH / 2 + 6 * scale, 16 * scale, 10 * scale);
 
+    // headlights (front = top)
     ctx.fillStyle = '#ff0';
-    ctx.fillRect(-carW / 2 + 5, carH / 2 - 14, 8, 5);
-    ctx.fillRect(carW / 2 - 13, carH / 2 - 14, 8, 5);
+    ctx.fillRect(-carW / 2 + 5 * scale, carH / 2 - 14 * scale, 8 * scale, 5 * scale);
+    ctx.fillRect(carW / 2 - 13 * scale, carH / 2 - 14 * scale, 8 * scale, 5 * scale);
 
+    // taillights (back = bottom, red)
     ctx.fillStyle = '#f00';
-    ctx.fillRect(-carW / 2 + 5, -carH / 2 - 2, 10, 4);
-    ctx.fillRect(carW / 2 - 15, -carH / 2 - 2, 10, 4);
+    ctx.fillRect(-carW / 2 + 5 * scale, -carH / 2 - 2 * scale, 10 * scale, 4 * scale);
+    ctx.fillRect(carW / 2 - 15 * scale, -carH / 2 - 2 * scale, 10 * scale, 4 * scale);
 
     ctx.restore();
-    }
+  }
+
+  function draw(ctx, canvasW, canvasH) {
+    const bounce = Math.sin(Date.now() / 100) * (state.speed / SPEED_LIMIT) * 3;
+    const cx = canvasW / 2 + state.steerX * 50;
+    const cy = canvasH - 90 + bounce;
+    drawSprite(ctx, cx, cy, 1, bodyColor, bodyColorDark);
+  }
+
+  // Draw the car sprite at an arbitrary screen position + scale (for remote cars).
+  function drawSpriteAt(ctx, cx, cy, scale, body, bodyDark) {
+    drawSprite(ctx, cx, cy, scale, body, bodyDark);
+  }
 
   return {
     reset,
@@ -141,6 +156,7 @@ const Car = (function() {
     hitObstacle,
     setSliding,
     draw,
+    drawSpriteAt,
     setColors,
     getX,
     getZ,

@@ -365,30 +365,21 @@ const Game = (function() {
     // by rs.x as a fraction of the road half-width (same convention as obstacles).
     const p = project({ x: seg.worldX, z: rs.z, w: config.roadWidth });
     if (!p) return;
-    const size = 90 * p.scale;
-    if (size < 3 || p.y < 0 || p.y > ctx.canvas.height) return;
+    if (p.y < 0 || p.y > ctx.canvas.height) return;
+    // Scale so the car's native 80px width matches a road-relative size.
+    // Obstacles use BASE_SIZE ~140-220 * scale; pick a comparable factor.
+    const scale = p.scale * 1.4;
+    if (scale < 0.05) return;
     const x = p.x + rs.x * p.w;
     const y = p.y;
-    // rival car (blocky, mirrors player style) - color based on remote role
-    ctx.fillStyle = '#333';
-    ctx.fillRect(x - size*0.5 - size*0.06, y - size*0.18, size*0.2, size*0.28);
-    ctx.fillRect(x + size*0.5 - size*0.14, y - size*0.18, size*0.2, size*0.28);
-    ctx.fillStyle = mpRemoteColor;
-    ctx.fillRect(x - size*0.5, y - size*0.5, size, size*0.56);
-    ctx.fillStyle = mpRemoteColorDark;
-    ctx.fillRect(x - size*0.5 + size*0.08, y - size*0.45, size*0.84, size*0.22);
-    ctx.fillStyle = '#9ef';
-    ctx.fillRect(x - size*0.4, y - size*0.42, size*0.3, size*0.14);
-    ctx.fillRect(x + size*0.1, y - size*0.42, size*0.3, size*0.14);
-    ctx.fillStyle = '#ff0';
-    ctx.fillRect(x - size*0.45, y - size*0.12, size*0.1, size*0.08);
-    ctx.fillRect(x + size*0.35, y - size*0.12, size*0.1, size*0.08);
+    // Draw using the SAME sprite as the local car, with the remote color.
+    Car.drawSpriteAt(ctx, x, y, scale, mpRemoteColor, mpRemoteColorDark);
     // name label
     ctx.save();
     ctx.fillStyle = '#fff';
-    ctx.font = Math.max(8, Math.floor(size*0.18)) + 'px monospace';
+    ctx.font = Math.max(8, Math.floor(80 * scale * 0.18)) + 'px monospace';
     ctx.textAlign = 'center';
-    ctx.fillText(rs.name || 'Opponent', x, y - size*0.6);
+    ctx.fillText(rs.name || 'Opponent', x, y - 45 * scale * 0.7);
     ctx.restore();
   }
 
