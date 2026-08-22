@@ -125,15 +125,15 @@ const Car = (function() {
     ctx.fillRect(-carW / 2 + 12 * scale, -carH / 2 + 6 * scale, 16 * scale, 10 * scale);
     ctx.fillRect(carW / 2 - 28 * scale, -carH / 2 + 6 * scale, 16 * scale, 10 * scale);
 
-    // headlights (front = top)
+    // headlights (front = far = top of sprite, yellow)
     ctx.fillStyle = '#ff0';
-    ctx.fillRect(-carW / 2 + 5 * scale, carH / 2 - 14 * scale, 8 * scale, 5 * scale);
-    ctx.fillRect(carW / 2 - 13 * scale, carH / 2 - 14 * scale, 8 * scale, 5 * scale);
-
-    // taillights (back = bottom, red)
-    ctx.fillStyle = '#f00';
     ctx.fillRect(-carW / 2 + 5 * scale, -carH / 2 - 2 * scale, 10 * scale, 4 * scale);
     ctx.fillRect(carW / 2 - 15 * scale, -carH / 2 - 2 * scale, 10 * scale, 4 * scale);
+
+    // taillights (back = near = bottom of sprite, red)
+    ctx.fillStyle = '#f00';
+    ctx.fillRect(-carW / 2 + 5 * scale, carH / 2 - 14 * scale, 8 * scale, 5 * scale);
+    ctx.fillRect(carW / 2 - 13 * scale, carH / 2 - 14 * scale, 8 * scale, 5 * scale);
 
     ctx.restore();
   }
